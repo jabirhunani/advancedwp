@@ -40,3 +40,33 @@ add_action('init', function () {
 add_action('wp_footer', function () {
     echo wp_create_nonce('my_secure_action');
 });
+
+
+add_action('wp_footer', function () {
+    ?>
+    <form method="post">
+        <?php wp_nonce_field('save_name_action', 'save_name_nonce'); ?>
+        <input type="text" name="username" placeholder="Enter name">
+        <button type="submit">Save</button>
+    </form>
+    <?php
+});
+
+add_action('init', function () {
+
+    if (
+        isset($_POST['username']) &&
+        isset($_POST['save_name_nonce']) &&
+        wp_verify_nonce($_POST['save_name_nonce'], 'save_name_action')
+    ) {
+        $name = sanitize_text_field($_POST['username']);
+        update_option('my_saved_name', $name);
+    }
+});
+add_action('wp_footer', function () {
+    $name = get_option('my_saved_name');
+    if ($name) {
+        echo '<p>Hello ' . esc_html($name) . '</p>';
+    }
+});
+
