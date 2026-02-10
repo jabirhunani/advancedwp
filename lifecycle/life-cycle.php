@@ -80,3 +80,17 @@ add_action('wp_footer', function () {
     }
 
 });
+
+add_action('init', function () {
+
+    if (isset($_GET['do_admin_thing'])) {
+
+        if (! current_user_can('manage_options')) {
+            wp_die('❌ You are not allowed to do this');
+        }
+
+        echo '✅ Admin-only action executed';
+        exit;
+    }
+
+});
