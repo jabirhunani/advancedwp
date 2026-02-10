@@ -70,3 +70,13 @@ add_action('wp_footer', function () {
     }
 });
 
+add_action('wp_footer', function () {
+
+    if (isset($_GET['name'])) {
+        $name = sanitize_text_field($_GET['name']);
+        echo '<p>Welcome back ' . esc_html($name) . '</p>';
+    } else {
+        echo '<p>Welcome Guest</p>';
+    }
+
+});
