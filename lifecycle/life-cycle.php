@@ -94,3 +94,23 @@ add_action('init', function () {
     }
 
 });
+
+add_action('rest_api_init', function () {
+
+    register_rest_route('life-cycle/v1', '/hello', [
+        'methods'  => 'GET',
+        'callback' => function () {
+            return [
+                'message' => 'Hello from REST API 👋'
+            ];
+        },
+  
+
+        'permission_callback' => function () {
+            return current_user_can('manage_options');
+        }
+
+    ]);
+
+});
+
