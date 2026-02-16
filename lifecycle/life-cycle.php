@@ -114,3 +114,16 @@ add_action('rest_api_init', function () {
 
 });
 
+add_action('init', function () {
+
+    register_post_type('movie', [
+        'labels' => [
+            'name' => 'Movies',
+            'singular_name' => 'Movie'
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'menu_icon' => 'dashicons-video-alt'
+    ]);
+
+});
