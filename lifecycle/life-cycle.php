@@ -127,3 +127,31 @@ add_action('init', function () {
     ]);
 
 });
+
+
+add_action('init', function () {
+    if (isset($_GET['movie_id']) && isset($_GET['rating'])) {
+
+        $movie_id = intval($_GET['movie_id']);
+        $rating = sanitize_text_field($_GET['rating']);
+        $director = sanitize_text_field($_GET['director']);
+        $price = intval($_GET['price']);
+
+        update_post_meta($movie_id, 'rating', $rating);
+        update_post_meta($movie_id, 'director', $director);
+        update_post_meta($movie_id, 'price', $price);
+    }
+});
+add_action('wp_footer', function () {
+
+    if (is_singular('movie')) {
+        $rating = get_post_meta(get_the_ID(), 'rating', true);
+        $director = get_post_meta(get_the_ID(), 'director', true);
+        $price = get_post_meta(get_the_ID(), 'price', true);
+
+        echo '<p>Rating: ' . esc_html($rating) . '</p>';
+        echo '<p>Director: ' . esc_html($director) . '</p>';
+        echo '<p>Price: ' . esc_html($price) . '</p>';
+    }
+
+});
