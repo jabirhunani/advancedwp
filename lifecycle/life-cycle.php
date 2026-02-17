@@ -155,3 +155,41 @@ add_action('wp_footer', function () {
     }
 
 });
+
+
+add_action('admin_menu', function () {
+    add_menu_page(
+        'Movie Settings',
+        'Movie Settings',
+        'manage_options',
+        'movie-settings',
+        'movie_settings_page_html',
+    );
+});
+
+function movie_settings_page_html() { ?>
+    <div class="wrap">
+        <h1>Movie Settings</h1>
+        <form method="post">
+            <?php
+            wp_nonce_field('save_movie_settings');
+            $price = get_option('movie_default_price', '');?>
+            <label for="default_ticket_price">Default Ticket Price: </label><br>
+            <input type="text" name="default_ticket_price" id="default_ticket_price" value="<?php echo esc_attr($price); ?>">
+            <br><br>
+
+            <input type="submit" name="save_settings" value="Save">
+        </form>
+    </div>
+<?php    
+}
+
+add_action('admin_init', function() {
+    if(isset($_POST['save_settings']) && isset($_POST['default_ticket_price']) &&  wp_verify_nonce($_POST['_wpnonce'], 'save_movie_settings')){
+        if(!current_user_can('manage_options')){
+            return;
+        }
+        $price = sanitize_text_field($_POST['default_ticket_price']);
+        update_option('movie_default_price', $price);
+    }
+});
